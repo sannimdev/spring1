@@ -24,18 +24,23 @@
 	<mvc:default-servlet-handler/>
 
 	<context:component-scan base-package="com.spring1" />
-
-	<!-- <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+   
+    <!-- 트랜잭션 처리가 안되는 경우 mvc-config.xml 에 다음을 추가  -->
+    <aop:config proxy-target-class="true">
+	   <aop:pointcut id="controllerOperation" expression="execution(public * com.sp..*Controller.*(..))" />
+   </aop:config>
+   
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="order" value="1" />
 		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
-		<property name="prefix" value="/WEB-INF/view/" />
+		<property name="prefix" value="/WEB-INF/views/" />
 		<property name="suffix" value=".jsp" />
-	</bean> -->
-<!-- 
+	</bean>
+
 	<mvc:view-resolvers>
 		<mvc:jsp prefix="/WEB-INF/view/" />
 	</mvc:view-resolvers>
- -->
+
 
 	<!-- 파일 업로드 -->
     <bean id="multipartResolver"  class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
@@ -55,13 +60,13 @@
         <property name="order" value="1" />
         <property name="exceptionMappings">
             <props>
-                <prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">.error.fileuploadFailure</prop>
-                <prop key="org.springframework.dao.DataAccessException">.error.dataAccessFailure</prop>
-				<prop key="java.lang.Exception">.error.error</prop>
+                <prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">error/fileuploadFailure</prop>
+                <prop key="org.springframework.dao.DataAccessException">error/dataAccessFailure</prop>
+				<prop key="java.lang.Exception">error/error</prop>
             </props>
         </property>
         <!-- 기타 예외가 발생한 경우  -->
-        <property name="defaultErrorView" value=".error.error"/>
+        <property name="defaultErrorView" value="error"/>
 		<!-- 에러 발생시 로그 출력 -->
     	<property name="warnLogCategory" value="ERROR"/>
     </bean>

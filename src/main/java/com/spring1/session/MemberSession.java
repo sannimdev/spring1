@@ -37,5 +37,11 @@ public class MemberSession {
 		this.nickname = nickname;
 		this.lastLogin = lastLogin;
 	}
+	@Override
+	public String toString() {
+		return "MemberSession [memberNo=" + memberNo + ", memberId=" + memberId + ", nickname=" + nickname
+				+ ", lastLogin=" + lastLogin + "]";
+	}
+	
 	
 }
