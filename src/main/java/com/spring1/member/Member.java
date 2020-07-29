@@ -82,5 +82,5 @@ public class Member {
 	public void setLastLogin(String lastLogin) {
 		this.lastLogin = lastLogin;
 	}
-
+	
 }
