@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member">
+	<sql id="selectMember">
+		SELECT
+			memberNo, memberId, password, nickname, email, available, created, updated, lastLogin
+		FROM member_detail
+	</sql>
+	
+	<select id="readMemberById" parameterType="String" resultType="com.spring1.member.Member">
+		<include refid="selectMember"/>
+		WHERE memberId=#{memberId}
+	</select>
+
+	<select id="readMemberByNo" parameterType="Long" resultType="com.spring1.member.Member">
+		<include refid="selectMember"/>
+		WHERE memberId=#{memberNo}
+	</select>
+	
+	<update id="updateLastLogin" parameterType="String">
+		UPDATE member_detail 
+			SET lastLogin = CURRENT_TIMESTAMP()
+			WHERE memberId = #{memberId}
+	</update>
+	
+</mapper>
