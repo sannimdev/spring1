@@ -5,8 +5,8 @@ import java.util.List;
 public interface BoardService {
 	public final static String MAPPER_PREFIX="board.";
 	
-	public List<Board> listBoard();
-	public List<Board> listBoard(String option, String keyword);
+	public List<Board> listBoard(int offset, int rows);
+	public List<Board> listBoard(String option, String keyword, int offset, int rows);
 	public long dataCount();
 	public long dataCount(String option, String keyword);
 	

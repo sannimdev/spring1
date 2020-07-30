@@ -2,14 +2,15 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="board">
-	<select id="boardList" parameterType="map" resultType="com.spring1.board.Board">
+	<select id="listBoard" parameterType="map" resultType="com.spring1.board.Board">
 		SELECT 
-			no, memberNo, title, content, created, updated, views
+			no, b.memberNo, nickname, title, content, b.created, b.updated, views
 		FROM 
-			board
-		<where>
+			board b
+		JOIN member_detail m ON m.memberNo = b.memberNo
 		<!-- 검색 조건 -->
-		</where>
+		<include refid="search"/>
+		LIMIT #{offset}, #{rows}
 	</select>
 	
 	<select id="dataCount" parameterType="map" resultType="Long">
@@ -17,11 +18,32 @@
 			IFNULL(COUNT(*), 0)
 		FROM
 			board
-		<where>
 		<!-- 검색조건 -->
-		</where>
+		<include refid="search"/>
 	</select>
 	
+	<sql id="search">
+		<where>
+		<if test="option != null and keyword != null">
+			<choose>
+				<when test="option == 'titlecontent'">
+					INSTR(title, #{keyword}) > 0
+						OR
+					INSTR(content, #{keyword}) > 0
+				</when>
+				<when test="option == 'title'">
+					INSTR(title, #{keyword}) > 0
+				</when>
+				<when test="option == 'content'">
+					INSTR(content, #{keyword}) > 0
+				</when>
+				<when test="option == 'nickname'">
+					nickname = #{keyword} > 0
+				</when>
+			</choose>
+		</if>
+		</where>
+	</sql>
 	
 	<select id="readBoard" parameterType="Long" resultType="com.spring1.board.Board">
 		SELECT 

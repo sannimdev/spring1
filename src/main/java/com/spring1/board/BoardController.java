@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring1.common.Constant;
-import com.spring1.session.MemberSession;
+import com.spring1.common.Pager;
 
 @Controller("board.boardController")
 @RequestMapping("/board/*")
@@ -29,6 +29,9 @@ public class BoardController implements Constant {
 	@Autowired
 	BoardService boardService;
 	
+	@Autowired
+	Pager pager;
+	
 	/*
 	 		게시판 글 목록 (GET)
 	 		/board/list
@@ -36,18 +39,28 @@ public class BoardController implements Constant {
 			파라미터(page, option, keyword)
 			page:게시물 요청 페이지, 없으면 기본값 1
 			option: 제목+내용, 제목, 내용, 작성자
+				1. title+content
+				2. title
+				3. content
+				4. nickname
 			keyword: 검색어
 	 */
-	public Map<String, Object> list(@RequestParam(value="page", defaultValue="1") Integer page){
+	@RequestMapping("/list")
+	public Map<String, Object> list(@RequestParam(value="page", defaultValue="1") Integer page, String option, String keyword){
 		Map<String, Object> map = new HashMap<>();
 		try {
+			final int rows = 10; //페이지당 요청 게시물 수, 추후 파라미터로 빼기
+			int offset = pager.offset(page, rows);//페이지를 변환한 오프셋
 			//게시판 목록 요청
-			List<Board> list = boardService.listBoard();
-			long dataCount = boardService.dataCount();
+			logger.warn("###option:" + option + ", keyword:" + keyword + "###");
+			List<Board> list = boardService.listBoard(option, keyword, offset, rows);
+			long dataCount = boardService.dataCount(option, keyword);
+			int pageCount = pager.pageCount(dataCount, rows);
 			//게시판 결과 출력
 			map.put(JSON_RESULT, JSON_RESULT_OK);
 			map.put(JSON_BOARD_LIST, list);
 			map.put(JSON_BOARD_DATA_COUNT, dataCount);
+			map.put(JSON_BOARD_PAGE_COUNT, pageCount);
 		} catch (Exception e) {
 			logger.error("###BoardController###\t\t"+e.getMessage());
 			map.put(JSON_RESULT, JSON_RESULT_ERROR);
@@ -89,6 +102,7 @@ public class BoardController implements Constant {
 	public Map<String, Object> readBoard(@PathVariable("no") Long no){
 		Map<String, Object> map = new HashMap<>();
 		try {
+			//조회수 1 증가
 			try {
 				boardService.updateViews(no);
 			} catch (Exception e) {
@@ -138,7 +152,7 @@ public class BoardController implements Constant {
 	public Map<String, Object> deleteBoard(@PathVariable("no") Long no, HttpSession session){
 		Map<String, Object> map = new HashMap<>();
 		try {
-			MemberSession memberSession = (MemberSession) session.getAttribute(MEMBER_SESSION);
+//			MemberSession memberSession = (MemberSession) session.getAttribute(MEMBER_SESSION);
 //			long memberNo = memberSession.getMemberNo();
 //			logger.info("###debug###: 게시물번호:[" +no+"]");
 			//TODO 테스트코드 지우기

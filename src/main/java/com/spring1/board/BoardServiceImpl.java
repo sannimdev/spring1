@@ -1,44 +1,68 @@
 package com.spring1.board;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring1.common.Constant;
 import com.spring1.common.dao.CommonDAO;
 
 @Service("board.boardSerivce")
-public class BoardServiceImpl implements BoardService {
+public class BoardServiceImpl implements BoardService, Constant {
 
 	@Autowired
 	private CommonDAO dao;
 
 	@Override
-	public List<Board> listBoard() {
+	public List<Board> listBoard(int offset, int rows) {
 		try {
-
+			return listBoard(null, null, offset, rows);
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		return null;
 	}
 
 	@Override
-	public List<Board> listBoard(String option, String keyword) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Board> listBoard(String option, String keyword, int offset, int rows) {
+		List<Board> list = null;
+		try {
+			Map<String, Object> options = new HashMap<>();
+			options.put(ATTRIBUTE_OFFSET, offset);
+			options.put(ATTRIBUTE_ROWS, rows);
+			if(option!=null && keyword!=null) {				
+				options.put(ATTRIBUTE_OPTION, option.toLowerCase());
+				options.put(ATTRIBUTE_KEYWORD, keyword);
+			}
+			list = dao.selectList(MAPPER_PREFIX+"listBoard", options);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 	@Override
 	public long dataCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return dataCount(null, null);
 	}
 
 	@Override
 	public long dataCount(String option, String keyword) {
-		// TODO Auto-generated method stub
-		return 0;
+		long dataCount = 0;
+		try {
+			Map<String, Object> options = new HashMap<>();
+			if(option!=null && keyword!=null) {				
+				options.put(ATTRIBUTE_OPTION, option.toLowerCase());
+				options.put(ATTRIBUTE_KEYWORD, keyword);
+			}
+			dataCount = dao.selectOne(MAPPER_PREFIX+"dataCount", options);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dataCount;
 	}
 	
 	@Override
