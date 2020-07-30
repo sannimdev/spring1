@@ -89,6 +89,10 @@ public class BoardController implements Constant {
 	public Map<String, Object> readBoard(@PathVariable("no") Long no){
 		Map<String, Object> map = new HashMap<>();
 		try {
+			try {
+				boardService.updateViews(no);
+			} catch (Exception e) {
+			}
 			Board board = boardService.readBoard(no);
 			map.put(JSON_RESULT, JSON_RESULT_OK);
 			map.put(JSON_BOARD_ITEM, board);

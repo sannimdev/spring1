@@ -11,6 +11,7 @@ public interface BoardService {
 	public long dataCount(String option, String keyword);
 	
 	public Board readBoard(long no);
+	public void updateViews(long no);
 	public void insertBoard(Board board) throws Exception;
 	public void updateBoard(Board board) throws Exception;
 	public void deleteBoard(Board board) throws Exception;

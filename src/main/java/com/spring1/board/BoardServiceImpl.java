@@ -53,6 +53,14 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
+	public void updateViews(long no) {
+		try {
+			dao.updateData(MAPPER_PREFIX+"updateViews", no);
+		} catch (Exception e) {
+		}
+	}
+
+	@Override
 	public void insertBoard(Board board) throws Exception {
 		// 게시판 글 쓰기
 		try {
