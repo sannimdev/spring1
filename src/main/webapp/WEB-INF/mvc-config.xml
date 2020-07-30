@@ -55,7 +55,7 @@
         <property name="order" value="1" />
      </bean>
  -->     
-    <bean id="exceptionResolver"
+    <!-- <bean id="exceptionResolver"
                class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
         <property name="order" value="1" />
         <property name="exceptionMappings">
@@ -65,9 +65,9 @@
 				<prop key="java.lang.Exception">error/error</prop>
             </props>
         </property>
-        <!-- 기타 예외가 발생한 경우  -->
+        기타 예외가 발생한 경우 
         <property name="defaultErrorView" value="error"/>
-		<!-- 에러 발생시 로그 출력 -->
+		에러 발생시 로그 출력
     	<property name="warnLogCategory" value="ERROR"/>
-    </bean>
+    </bean> -->
 </beans>

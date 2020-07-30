@@ -2,7 +2,65 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="board">
-	<insert id="insertTest" parameterType="String">
-		INSERT INTO test(content) VALUES(#{content})
+	<select id="boardList" parameterType="map" resultType="com.spring1.board.Board">
+		SELECT 
+			no, memberNo, title, content, created, updated, views
+		FROM 
+			board
+		<where>
+		<!-- 검색 조건 -->
+		</where>
+	</select>
+	
+	<select id="dataCount" parameterType="map" resultType="Long">
+		SELECT 
+			IFNULL(COUNT(*), 0)
+		FROM
+			board
+		<where>
+		<!-- 검색조건 -->
+		</where>
+	</select>
+	
+	
+	<select id="readBoard" parameterType="Long" resultType="com.spring1.board.Board">
+		SELECT 
+			no, b.memberNo, nickname, title, content, b.created, b.updated, views
+		FROM 
+			board b
+		JOIN member_detail m ON m.memberNo = b.memberNo
+		WHERE 
+			no = #{no}
+	</select>
+	
+	<insert id="insertBoard" parameterType="com.spring1.board.Board">
+		INSERT INTO board(memberNo, title, content, created, updated, views)
+		VALUES(#{memberNo}, #{title}, #{content}, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), 0)
 	</insert>
+	
+	<update id="updateViews" parameterType="Long">
+		UPDATE board SET views=views+1
+		WHERE
+			no = #{no}
+	</update>
+	
+	<update id="updateBoard" parameterType="com.spring1.board.Board">
+		UPDATE board 
+		SET 
+			title=#{title}, 
+			content=#{content}, 
+			updated=CURRENT_TIMESTAMP()
+		WHERE
+			no = #{no}
+				AND
+			memberNo = #{memberNo}
+	</update>
+	
+	<delete id="deleteBoard" parameterType="com.spring1.board.Board">
+		DELETE FROM board
+		WHERE
+			no = #{no}
+				AND
+			memberNo = #{memberNo}
+	</delete>
 </mapper>
