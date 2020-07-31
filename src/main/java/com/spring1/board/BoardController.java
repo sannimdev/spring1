@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.spring1.common.Constant;
 import com.spring1.common.Pager;
 
+@CrossOrigin
 @Controller("board.boardController")
 @RequestMapping("/board/*")
 @RestController
@@ -60,6 +62,7 @@ public class BoardController implements Constant {
 			map.put(JSON_RESULT, JSON_RESULT_OK);
 			map.put(JSON_BOARD_LIST, list);
 			map.put(JSON_BOARD_DATA_COUNT, dataCount);
+			map.put(JSON_BOARD_CURRENT_PAGE, page);
 			map.put(JSON_BOARD_PAGE_COUNT, pageCount);
 		} catch (Exception e) {
 			logger.error("###BoardController###\t\t"+e.getMessage());
