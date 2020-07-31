@@ -10,6 +10,7 @@
 		JOIN member_detail m ON m.memberNo = b.memberNo
 		<!-- 검색 조건 -->
 		<include refid="search"/>
+		ORDER BY no DESC
 		LIMIT #{offset}, #{rows}
 	</select>
 	
