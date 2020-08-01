@@ -52,12 +52,15 @@ public class BoardController implements Constant {
 		Map<String, Object> map = new HashMap<>();
 		try {
 			final int rows = 10; //페이지당 요청 게시물 수, 추후 파라미터로 빼기
-			int offset = pager.offset(page, rows);//페이지를 변환한 오프셋
 			//게시판 목록 요청
 			logger.warn("###option:" + option + ", keyword:" + keyword + "###");
-			List<Board> list = boardService.listBoard(option, keyword, offset, rows);
 			long dataCount = boardService.dataCount(option, keyword);
 			int pageCount = pager.pageCount(dataCount, rows);
+			if(page > pageCount) {//요청한 페이지가 전체 페이지 수를 넘어간다면
+				page = pageCount; 
+			}
+			int offset = pager.offset(page, rows);//페이지를 변환한 오프셋
+			List<Board> list = boardService.listBoard(option, keyword, offset, rows);
 			//게시판 결과 출력
 			map.put(JSON_RESULT, JSON_RESULT_OK);
 			map.put(JSON_BOARD_LIST, list);
